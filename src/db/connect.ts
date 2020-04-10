@@ -6,6 +6,7 @@ const createDatabaseConnection = () =>
       `mongodb://${process.env.DB_ADDRESS}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
       {
         useNewUrlParser: true,
+        useCreateIndex: true,
         useUnifiedTopology: true,
       }
     )

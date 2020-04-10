@@ -1,4 +1,5 @@
 import { IResolvers } from "graphql-tools";
+import * as bcryptjs from "bcryptjs";
 import { MutationRegisterArgs } from "../../types/types";
 import User from "../../models/user.model";
 
@@ -7,15 +8,19 @@ export const resolvers: IResolvers = {
     loggedUser: (_) => "user",
   },
   Mutation: {
-    register: async (_, { email, password, name }: MutationRegisterArgs) => {
-      const savedUser = await new User({
-        name,
-        email,
-        password,
-      }).save();
-      console.log("User created: ", savedUser);
+    register: async (
+      _,
+      { email, password, username }: MutationRegisterArgs
+    ) => {
+      const hashedPassword = await bcryptjs.hash(password, 10);
 
-      return "User created";
+      const savedUser = await new User({
+        username,
+        email,
+        password: hashedPassword,
+      }).save();
+
+      return savedUser.username;
     },
   },
 };

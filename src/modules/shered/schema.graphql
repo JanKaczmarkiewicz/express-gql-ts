@@ -1,0 +1,5 @@
+type User @entity(additionalFields: [{ path: "password", type: "string" }]) {
+  id: String! @id
+  username: String! @column
+  email: String! @column
+}

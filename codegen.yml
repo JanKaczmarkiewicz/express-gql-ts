@@ -1,4 +1,7 @@
 schema: "src/**/*.graphql"
+require:
+  - ts-node/register
 generates:
   src/types/types.d.ts:
+    - typescript-mongodb
     - typescript
