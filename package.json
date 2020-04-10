@@ -20,6 +20,7 @@
     "@graphql-codegen/cli": "^1.13.2",
     "@graphql-codegen/near-operation-file-preset": "^1.13.2",
     "@graphql-codegen/typescript": "^1.13.2",
+    "@graphql-codegen/typescript-mongodb": "^1.13.2",
     "@types/express": "^4.17.5",
     "@types/mongoose": "^5.7.9",
     "@types/node": "^13.11.1",

@@ -1,4 +1,4 @@
 schema: "src/**/*.graphql"
 generates:
-  src/types.d.ts:
+  src/types/types.d.ts:
     - typescript

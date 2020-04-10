@@ -17,6 +17,7 @@ export type Mutation = {
 export type MutationRegisterArgs = {
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
