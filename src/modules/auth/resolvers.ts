@@ -1,5 +1,15 @@
-export const resolvers = {
+import { IResolvers } from "graphql-tools";
+import { MutationRegisterArgs } from "../../types";
+
+export const resolvers: IResolvers = {
   Query: {
-    hello: (_: any, { name }: { name: string }) => `Hello ${name || "World"}`,
+    loggedUser: (_) => "user",
+  },
+  Mutation: {
+    register: (_, { email, password }: MutationRegisterArgs) => {
+      email;
+      password;
+      return "token";
+    },
   },
 };

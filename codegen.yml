@@ -1,0 +1,4 @@
+schema: "src/**/*.graphql"
+generates:
+  src/types.d.ts:
+    - typescript

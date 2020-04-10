@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 
-const connectToDatabase = () =>
+const createDatabaseConnection = () =>
   mongoose
     .connect(
       `mongodb://${process.env.DB_ADDRESS}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
@@ -13,4 +13,4 @@ const connectToDatabase = () =>
       throw new Error(err);
     });
 
-export default connectToDatabase;
+export default createDatabaseConnection;
