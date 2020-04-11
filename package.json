@@ -6,7 +6,7 @@
     "_startServer": "ts-node src/init.ts",
     "start": "cross-env ENVIRONMENT=dev nodemon --exec ts-node src/init.ts",
     "generate": "graphql-codegen",
-    "test": "cross-env ENVIRONMENT=test jest",
+    "test": "cross-env ENVIRONMENT=test jest --detectOpenHandles",
     "ci": "cross-env ENVIRONMENT=test start-server-and-test _startServer http://localhost:3002 test"
   },
   "author": "Jan Kaczmarkiewicz",
@@ -48,7 +48,7 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
-      "<rootDir>/config/.env.test.config.ts"
+      "<rootDir>src/testUtils/_test.init.ts"
     ]
   }
 }

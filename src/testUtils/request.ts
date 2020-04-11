@@ -7,4 +7,4 @@ export const request = (query: string) =>
     url,
     method: "post",
     data: { query },
-  });
+  }).then((res) => res.data);
