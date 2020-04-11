@@ -1,33 +1,30 @@
 import * as fs from "fs";
 import * as path from "path";
-import { makeExecutableSchema, mergeSchemas } from "graphql-tools";
+import { makeExecutableSchema } from "graphql-tools";
 import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
 
 const pathToModules = path.join(__dirname, "../modules");
 
 export default () => {
-  const modulesSchemas = fs
+  const folders = fs
     .readdirSync(pathToModules)
-    .filter((folder) => !folder.startsWith("_"))
-    .reduce(
-      (schema: any, folder) => {
-        const resolversPath = `${pathToModules}\\${folder}\\resolvers.ts`;
-        const resolver = fs.existsSync(resolversPath)
-          ? require(resolversPath).resolvers
-          : null;
+    .filter((folder) => !folder.startsWith("_"));
 
-        const typeDef = fs.readFileSync(
-          `${pathToModules}\\${folder}\\schema.graphql`,
-          "utf8"
-        );
-        return {
-          resolvers: [...schema.resolvers, resolver],
-          typeDefs: [...schema.typeDefs, typeDef],
-        };
-      },
-      { resolvers: [], typeDefs: [] }
-    );
+  const resolvers = folders.map((folder) => {
+    const resolversPath = `${pathToModules}\\${folder}\\resolvers.ts`;
+    return fs.existsSync(resolversPath)
+      ? require(resolversPath).resolvers
+      : null;
+  });
 
-  modulesSchemas.typeDefs.push(DIRECTIVES);
-  return mergeSchemas({ schemas: [makeExecutableSchema(modulesSchemas)] });
+  const typeDefs = folders.map((folder) =>
+    fs.readFileSync(`${pathToModules}\\${folder}\\schema.graphql`, "utf8")
+  );
+
+  const schemas = makeExecutableSchema({
+    typeDefs: [DIRECTIVES, ...typeDefs],
+    resolvers,
+  });
+
+  return schemas;
 };

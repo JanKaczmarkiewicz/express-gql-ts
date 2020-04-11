@@ -20,7 +20,7 @@ export const resolvers: IResolvers = {
         password: hashedPassword,
       }).save();
 
-      return savedUser.username;
+      return savedUser.password;
     },
   },
 };
