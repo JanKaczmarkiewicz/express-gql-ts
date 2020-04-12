@@ -13,10 +13,12 @@ mutation{
 }
 `;
 
+let token;
+
 test("Registered user should be saved in database.", async () => {
   const response = await request(createUserGQL);
-  console.log(response);
-  expect(response.data.register).not.toBe(null);
+  token = response.data.register;
+  expect(token).not.toBe(null);
 
   const foundUsers = await User.find({ email: user.email });
   expect(foundUsers).toHaveLength(1);

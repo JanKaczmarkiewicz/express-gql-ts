@@ -13,7 +13,7 @@ export const validateToken = async (context: any): Promise<string | null> => {
 
   const token = bearerToken.split(" ")[1];
 
-  const userId = jwt.decode(token) as string;
+  const userId = jwt.verify(token, process.env.JWT_SECRET as string) as string;
 
   const foundUser = await mongoose.models.User.findOne({ _id: userId });
 
