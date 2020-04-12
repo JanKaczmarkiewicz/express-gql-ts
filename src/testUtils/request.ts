@@ -7,4 +7,5 @@ export const request = (query: string) =>
     url,
     method: "post",
     data: { query },
+    headers: { Authorization: "Bearer " },
   }).then((res) => res.data);
