@@ -38,10 +38,13 @@ query{
 }`;
 
 test("Me query with token should returns userData.", async () => {
-  const response = await request(meGQL, token);
-  const user = response.data.me;
-
+  const response0 = await request(meGQL, token);
+  const user = response0.data.me;
   expect(user).not.toBe(null);
   expect(user.username).toBe(dummyUserData.username);
   expect(user.password).toBe(undefined);
+
+  const response1 = await request(meGQL, "bad_token");
+  const user1 = response1.data;
+  expect(user1).toBe(null);
 });
