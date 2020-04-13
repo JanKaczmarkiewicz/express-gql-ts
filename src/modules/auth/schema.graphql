@@ -3,5 +3,5 @@ type Mutation {
 }
 
 type Query {
-  loggedUser: String!
+  me: User!
 }

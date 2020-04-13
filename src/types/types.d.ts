@@ -43,7 +43,7 @@ export type MutationRegisterArgs = {
 
 export type Query = {
    __typename?: 'Query';
-  loggedUser: Scalars['String'];
+  me: User;
 };
 
 export type User = {
