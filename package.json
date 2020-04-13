@@ -24,7 +24,8 @@
     "graphql-yoga": "^1.18.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.7",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "yup": "^0.28.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.13.2",

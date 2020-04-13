@@ -1,5 +1,6 @@
 type Mutation {
   register(email: String!, password: String!, username: String!): String #token
+  login(email: String!, password: String!): String #token
 }
 
 type Query {
