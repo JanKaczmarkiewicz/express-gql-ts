@@ -2,7 +2,8 @@ import { request } from "../../testUtils/request";
 import User from "../../models/User.model";
 
 const dummyUserData = {
-  email: "test@testdomain.com",
+  // email: "test@testdomain.com",
+  email: "jan.michal.kaczmarkiewicz@gmail.com",
   password: "Sdasdasdafa",
   username: "TestUser",
 };

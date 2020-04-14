@@ -4,6 +4,7 @@ export type UserDbObject = {
   _id: ObjectID,
   username: string,
   email: string,
+  confirmed: boolean,
   password: string,
 };
 
@@ -33,7 +34,7 @@ export type Mutation = {
    __typename?: 'Mutation';
   register?: Maybe<Scalars['String']>;
   login?: Maybe<Scalars['String']>;
-  validateEmail: Scalars['Boolean'];
+  verifyEmail: Scalars['Boolean'];
 };
 
 
@@ -50,7 +51,7 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationValidateEmailArgs = {
+export type MutationVerifyEmailArgs = {
   token: Scalars['String'];
 };
 
@@ -64,4 +65,5 @@ export type User = {
   id: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
+  confirmed: Scalars['Boolean'];
 };

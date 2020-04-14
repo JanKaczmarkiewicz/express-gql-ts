@@ -57,7 +57,7 @@ export const resolvers: IResolvers = {
         confirmed: false,
       }).save();
 
-      sendConfirmingEmail(savedUser as any);
+      await sendConfirmingEmail(savedUser as any);
 
       return signAuthToken({ id: savedUser.id });
     },
