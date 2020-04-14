@@ -5,19 +5,24 @@ import {
   UserInputError,
   ForbiddenError,
 } from "apollo-server-core";
-import { MutationRegisterArgs } from "../../types/types";
+import {
+  MutationRegisterArgs,
+  MutationLoginArgs,
+  MutationValidateEmailArgs,
+} from "../../types/types";
 
 import User from "../../models/user.model";
 
-import { validateToken } from "../../utils/validateToken";
-import { signToken } from "../../utils/signToken";
+import { verifyAuthToken, signAuthToken } from "../../utils/authToken";
 import { registerSchema } from "./validators";
 import { validateArgs } from "../../utils/validateArgs";
+import { verifyConfirmingToken } from "../../utils/confirmingToken";
+import { sendConfirmingEmail } from "../../utils/sendConfirmingEmail";
 
 export const resolvers: IResolvers = {
   Query: {
     me: async (_, __, context) => {
-      const userId = await validateToken(context);
+      const userId = await verifyAuthToken(context);
 
       if (!userId) return new ForbiddenError("Bad token.");
 
@@ -49,14 +54,17 @@ export const resolvers: IResolvers = {
         username,
         email,
         password: hashedPassword,
+        confirmed: false,
       }).save();
 
-      return signToken(savedUser.id);
+      sendConfirmingEmail(savedUser as any);
+
+      return signAuthToken({ id: savedUser.id });
     },
-    login: async (_, { email, password }: MutationRegisterArgs) => {
+    login: async (_, { email, password }: MutationLoginArgs) => {
       const foundUser = await User.findOne({ email });
 
-      if (!foundUser) return new AuthenticationError("Invalid email or login");
+      if (!foundUser) throw new AuthenticationError("Invalid email or login");
 
       const isPasswordCorrect = await bcrypt.compare(
         password,
@@ -64,9 +72,26 @@ export const resolvers: IResolvers = {
       );
 
       if (!isPasswordCorrect)
-        return new AuthenticationError("Invalid email or login");
+        throw new AuthenticationError("Invalid email or login");
 
-      return signToken(foundUser.id);
+      return signAuthToken({ id: foundUser.id });
+    },
+    verifyEmail: async (_, { token }: MutationValidateEmailArgs) => {
+      const userId = verifyConfirmingToken(token);
+
+      if (!userId) {
+        throw new ForbiddenError("Bad confirming token");
+      }
+
+      const foundUser = await User.findOne({ id: userId });
+
+      if (!foundUser) {
+        throw new AuthenticationError("User not exists");
+      }
+
+      const { confirmed } = await foundUser.update({ confirmed: true });
+
+      return confirmed;
     },
   },
 };

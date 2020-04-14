@@ -5,7 +5,7 @@
   "scripts": {
     "_startServer": "ts-node src/init.ts",
     "start": "cross-env ENVIRONMENT=dev nodemon --exec ts-node src/init.ts",
-    "generate": "graphql-codegen",
+    "gen": "graphql-codegen",
     "test": "cross-env ENVIRONMENT=test jest --detectOpenHandles",
     "ci": "cross-env ENVIRONMENT=test start-server-and-test _startServer http://localhost:3002 test"
   },
@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.4.6",
     "yup": "^0.28.3"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "@types/mongoose": "^5.7.9",
     "@types/morgan": "^1.9.0",
     "@types/node": "^13.11.1",
+    "@types/nodemailer": "^6.4.0",
     "@types/yup": "^0.26.35",
     "axios": "^0.19.2",
     "jest": "^25.3.0",

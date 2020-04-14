@@ -1,11 +1,18 @@
-import * as jwt from "jsonwebtoken";
 import * as mongoose from "mongoose";
+import * as jwt from "jsonwebtoken";
+import { TokenData } from "../types/util";
+
+// const algorithm = "RS256";
+const secret = process.env.JWT_AUTH_SECRET as string;
+
+export const signAuthToken = (tokenData: TokenData): string =>
+  jwt.sign(tokenData, secret as string);
 
 /**
  * @param context Graphql context
  * @returns (in Promise) user id contained in jwt token, or false in case of bad token
  */
-export const validateToken = async (context: any): Promise<string | null> => {
+export const verifyAuthToken = async (context: any): Promise<string | null> => {
   const bearerToken: string | undefined =
     context?.request?.headers?.authorization;
 
@@ -14,7 +21,9 @@ export const validateToken = async (context: any): Promise<string | null> => {
   const token = bearerToken.split(" ")[1];
   let userId: string;
   try {
-    userId = jwt.verify(token, process.env.JWT_SECRET as string) as string;
+    const { id } = jwt.verify(token, secret) as TokenData;
+
+    userId = id;
   } catch (error) {
     return null;
   }

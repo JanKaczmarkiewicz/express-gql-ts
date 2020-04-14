@@ -32,6 +32,8 @@ export type AdditionalEntityFields = {
 export type Mutation = {
    __typename?: 'Mutation';
   register?: Maybe<Scalars['String']>;
+  login?: Maybe<Scalars['String']>;
+  validateEmail: Scalars['Boolean'];
 };
 
 
@@ -39,6 +41,17 @@ export type MutationRegisterArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationValidateEmailArgs = {
+  token: Scalars['String'];
 };
 
 export type Query = {
