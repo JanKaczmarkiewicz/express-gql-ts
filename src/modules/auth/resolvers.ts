@@ -8,7 +8,7 @@ import {
 import {
   MutationRegisterArgs,
   MutationLoginArgs,
-  MutationValidateEmailArgs,
+  MutationVerifyEmailArgs,
 } from "../../types/types";
 
 import User from "../../models/user.model";
@@ -76,7 +76,7 @@ export const resolvers: IResolvers = {
 
       return signAuthToken({ id: foundUser.id });
     },
-    verifyEmail: async (_, { token }: MutationValidateEmailArgs) => {
+    verifyEmail: async (_, { token }: MutationVerifyEmailArgs) => {
       const userId = verifyConfirmingToken(token);
 
       if (!userId) {
