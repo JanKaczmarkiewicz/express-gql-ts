@@ -11,16 +11,15 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendConfirmingEmail = async (user: User) => {
-  const token = signConfirmingToken({ id: user.id });
+  const token = signConfirmingToken({ id: user._id });
 
   await transporter.sendMail(
     {
-      from: "positiveKiddo@gmail.com", // sender address
+      from: process.env.EMAIL_SENDER_ADDRESS,
       to: user.email,
-      subject: "Confirm account", // Subject line
+      subject: "Confirm account",
       text: `Hello ${user.username}`,
       html: `<a href="http://localhost:${process.env.PORT}/confirm/${token}">Confirm your account</a>`,
-      // html: "RAFAŁ JEST GŁUPI I PAWEŁ TEŹ",
     },
     (err) => {
       if (err) {

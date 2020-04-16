@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { makeExecutableSchema } from "graphql-tools";
-import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
+import { IResolvers } from "graphql-tools";
 
 const pathToModules = path.join(__dirname, "../modules");
 
@@ -10,21 +9,19 @@ export default () => {
     .readdirSync(pathToModules)
     .filter((folder) => !folder.startsWith("_"));
 
-  const resolvers = folders.map((folder) => {
+  const resolvers: IResolvers[] = [];
+
+  folders.forEach((folder) => {
     const resolversPath = `${pathToModules}\\${folder}\\resolvers.ts`;
-    return fs.existsSync(resolversPath)
-      ? require(resolversPath).resolvers
-      : null;
+    fs.existsSync(resolversPath) &&
+      resolvers.push(require(resolversPath).resolvers);
   });
 
-  const typeDefs = folders.map((folder) =>
-    fs.readFileSync(`${pathToModules}\\${folder}\\schema.graphql`, "utf8")
-  );
+  const typeDefs = folders
+    .map((folder) =>
+      fs.readFileSync(`${pathToModules}\\${folder}\\schema.graphql`, "utf8")
+    )
+    .join();
 
-  const schemas = makeExecutableSchema({
-    typeDefs: [DIRECTIVES, ...typeDefs],
-    resolvers,
-  });
-
-  return schemas;
+  return { typeDefs, resolvers };
 };

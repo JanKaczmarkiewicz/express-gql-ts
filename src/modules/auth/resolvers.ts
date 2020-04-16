@@ -1,38 +1,36 @@
 import * as bcrypt from "bcryptjs";
-import { IResolvers } from "graphql-tools";
 import {
   AuthenticationError,
   UserInputError,
   ForbiddenError,
 } from "apollo-server-core";
-import {
-  MutationRegisterArgs,
-  MutationLoginArgs,
-  MutationValidateEmailArgs,
-} from "../../types/types";
+import { Resolvers } from "../../types/types";
 
 import User from "../../models/user.model";
 
 import { verifyAuthToken, signAuthToken } from "../../utils/authToken";
+import { verifyConfirmingToken } from "../../utils/confirmingToken";
+
 import { registerSchema } from "./validators";
 import { validateArgs } from "../../utils/validateArgs";
-import { verifyConfirmingToken } from "../../utils/confirmingToken";
 import { sendConfirmingEmail } from "../../utils/sendConfirmingEmail";
 
-export const resolvers: IResolvers = {
+export const resolvers: Resolvers = {
   Query: {
     me: async (_, __, context) => {
       const userId = await verifyAuthToken(context);
 
-      if (!userId) return new ForbiddenError("Bad token.");
+      if (!userId) throw new ForbiddenError("Bad token.");
 
-      const user = await User.findOne({ _id: userId });
+      const user = await User.findOne({ id: userId });
+
+      if (!user) throw new ForbiddenError("Not found.");
 
       return user;
     },
   },
   Mutation: {
-    register: async (_, args: MutationRegisterArgs) => {
+    register: async (_, args) => {
       const { password, username, email } = args;
 
       const validationErrors = await validateArgs(registerSchema, args);
@@ -61,7 +59,7 @@ export const resolvers: IResolvers = {
 
       return signAuthToken({ id: savedUser.id });
     },
-    login: async (_, { email, password }: MutationLoginArgs) => {
+    login: async (_, { email, password }) => {
       const foundUser = await User.findOne({ email });
 
       if (!foundUser) throw new AuthenticationError("Invalid email or login");
@@ -76,7 +74,7 @@ export const resolvers: IResolvers = {
 
       return signAuthToken({ id: foundUser.id });
     },
-    verifyEmail: async (_, { token }: MutationValidateEmailArgs) => {
+    verifyEmail: async (_, { token }) => {
       const userId = verifyConfirmingToken(token);
 
       if (!userId) {
