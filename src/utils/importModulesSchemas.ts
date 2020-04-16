@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { makeExecutableSchema } from "graphql-tools";
 import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
+import { AuthDirective } from "../directives/auth";
 
 const pathToModules = path.join(__dirname, "../modules");
 
@@ -24,6 +25,9 @@ export default () => {
   const schemas = makeExecutableSchema({
     typeDefs: [DIRECTIVES, ...typeDefs],
     resolvers,
+    directiveResolvers: {
+      isAuthenticated: AuthDirective,
+    },
   });
 
   return schemas;

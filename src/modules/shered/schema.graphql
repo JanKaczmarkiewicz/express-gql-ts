@@ -1,3 +1,6 @@
+directive @isAuthenticated on QUERY | FIELD
+directive @hasRole(scope: [String]) on QUERY | FIELD
+
 type User @entity(additionalFields: [{ path: "password", type: "string" }]) {
   id: String! @id
   username: String! @column
