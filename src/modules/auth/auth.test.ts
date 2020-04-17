@@ -4,6 +4,7 @@ import { removeAllCollections } from "../../testUtils/connectToMongoose";
 import createDatabaseConnection from "../../db/connect";
 import User from "../../models/User.model";
 import gql from "graphql-tag";
+import { ME, REGISTER } from "../../testUtils/queries";
 
 beforeAll(async () => {
   await createDatabaseConnection();
@@ -18,11 +19,6 @@ const dummyUserData = {
 };
 
 let token: string | null;
-const REGISTER = gql`
-  mutation register($email: String!, $password: String!, $username: String!) {
-    register(email: $email, password: $password, username: $username)
-  }
-`;
 
 describe("Register", () => {
   const { query } = createTestClient(createServer());
@@ -50,29 +46,22 @@ describe("Register", () => {
   });
 });
 
-// describe("Me", () => {
-//   const meGQL = `
-//   query{
-//     me{
-//       username
-//       email
-//       id
-//     }
-//   }`;
-//   it("With valid token should returns user data.", async () => {
-//     const response = await request(meGQL, token);
-//     console.log(response);
-//     const user = response.data.me;
-//     expect(user).not.toBe(null);
-//     expect(user.username).toBe(dummyUserData.username);
-//     expect(user.password).toBe(undefined);
-//   });
-//   it("With invalid token result in null.", async () => {
-//     const response = await request(meGQL, "bad_token");
-//     const user = response.data;
-//     expect(user).toBe(null);
-//   });
-// });
+describe("Me", () => {
+  const { query } = createTestClient(createServer({ token }));
+
+  it("With valid token should returns user data.", async () => {
+    const res = await query({ query: ME });
+    const user = res.data?.me;
+    expect(user).not.toBe(null);
+    expect(user.username).toBe(dummyUserData.username);
+    expect(user.password).toBe(undefined);
+  });
+  it("With invalid token result in null.", async () => {
+    const response = await request(meGQL, "bad_token");
+    const user = response.data;
+    expect(user).toBe(null);
+  });
+});
 
 // const loginGQL = (email: string, password: string) => `
 // mutation{

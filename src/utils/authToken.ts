@@ -12,25 +12,11 @@ export const signAuthToken = (tokenData: TokenData): string =>
  * @param context Graphql context
  * @returns (in Promise) user id contained in jwt token, or false in case of bad token
  */
-export const verifyAuthToken = async (context: any): Promise<string | null> => {
-  const bearerToken: string | undefined =
-    context?.request?.headers?.authorization;
-
-  if (!bearerToken) return null;
-
+export const verifyAuthToken = (bearerToken: string): TokenData | null => {
   const token = bearerToken.split(" ")[1];
-  let userId: string;
   try {
-    const { id } = jwt.verify(token, secret) as TokenData;
-
-    userId = id;
+    return jwt.verify(token, secret) as TokenData;
   } catch (error) {
     return null;
   }
-
-  const foundUser = await mongoose.models.User.findOne({ _id: userId });
-
-  if (!foundUser) return null;
-
-  return foundUser._id;
 };

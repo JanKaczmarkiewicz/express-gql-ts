@@ -8,7 +8,7 @@ import { Resolvers } from "../../types/types";
 
 import User from "../../models/user.model";
 
-import { verifyAuthToken, signAuthToken } from "../../utils/authToken";
+import { signAuthToken } from "../../utils/authToken";
 import { verifyConfirmingToken } from "../../utils/confirmingToken";
 
 import { registerSchema } from "./validators";
@@ -17,14 +17,8 @@ import { sendConfirmingEmail } from "../../utils/sendConfirmingEmail";
 
 export const resolvers: Resolvers = {
   Query: {
-    me: async (_, __, context) => {
-      const userId = await verifyAuthToken(context);
-
-      if (!userId) throw new ForbiddenError("Bad token.");
-
-      const user = await User.findOne({ id: userId });
-
-      if (!user) throw new ForbiddenError("Not found.");
+    me: async (_, __, { user }) => {
+      if (!user) throw new ForbiddenError("Provide a token.");
 
       return user;
     },
