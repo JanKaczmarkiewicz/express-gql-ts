@@ -40,8 +40,8 @@ export type AdditionalEntityFields = {
 
 export type Mutation = {
    __typename?: 'Mutation';
-  register?: Maybe<Scalars['String']>;
-  login?: Maybe<Scalars['String']>;
+  register: Scalars['String'];
+  login: Scalars['String'];
   verifyEmail: Scalars['Boolean'];
 };
 
@@ -195,8 +195,8 @@ export type MapDirectiveArgs = {   path: Scalars['String']; };
 export type MapDirectiveResolver<Result, Parent, ContextType = Context, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  register?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password' | 'username'>>,
-  login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>,
+  register?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password' | 'username'>>,
+  login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>,
   verifyEmail?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationVerifyEmailArgs, 'token'>>,
 };
 

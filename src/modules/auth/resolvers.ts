@@ -19,7 +19,6 @@ export const resolvers: Resolvers = {
   Query: {
     me: async (_, __, { user }) => {
       if (!user) throw new ForbiddenError("Provide a token.");
-
       return user;
     },
   },
@@ -75,7 +74,7 @@ export const resolvers: Resolvers = {
         throw new ForbiddenError("Bad confirming token");
       }
 
-      const foundUser = await User.findOne({ id: userId });
+      const foundUser = await User.findOne({ _id: userId });
 
       if (!foundUser) {
         throw new AuthenticationError("User not exists");

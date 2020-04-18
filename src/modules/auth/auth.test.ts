@@ -1,85 +1,114 @@
-import createServer from "../../server/createServer";
-import { createTestClient } from "apollo-server-testing";
-import { removeAllCollections } from "../../testUtils/connectToMongoose";
 import createDatabaseConnection from "../../db/connect";
-import User from "../../models/User.model";
-import gql from "graphql-tag";
-import { ME, REGISTER } from "../../testUtils/queries";
+
+import { removeAllCollections } from "../../testUtils/connectToMongoose";
+import User from "../../models/user.model";
+
+import { query } from "../../testUtils/query";
+import { REGISTER, LOGIN, ME } from "../../testUtils/queries";
+
+const dummyUser = {
+  email: "tets2@gmail.com",
+  username: "Test2",
+  password: "password123",
+};
 
 beforeAll(async () => {
   await createDatabaseConnection();
-  await removeAllCollections();
 });
 
-const dummyUserData = {
-  // email: "test@testdomain.com",
-  email: "jan.michal.kaczmarkiewicz@gmail.com",
-  password: "Sdasdasdafa",
-  username: "TestUser",
-};
-
-let token: string | null;
-
 describe("Register", () => {
-  const { query } = createTestClient(createServer());
+  beforeAll(async () => {
+    await removeAllCollections();
+  });
 
   it("Response should returns token", async () => {
-    const res = await query({ query: REGISTER, variables: dummyUserData });
-    console.log(res);
-    token = res.data?.register;
+    const res = await query({ query: REGISTER, variables: dummyUser });
+
+    const token = res.data?.register;
     expect(token).toBeTruthy();
-    const foundUsers = await User.find({ email: dummyUserData.email });
+    const foundUsers = await User.find({ email: dummyUser.email });
 
     expect(foundUsers).toHaveLength(1);
     const foundUser = foundUsers[0];
-    expect(foundUser.username).toBe(dummyUserData.username);
-    expect(foundUser.password).not.toBe(dummyUserData.password);
-    expect(foundUser.email).toBe(dummyUserData.email);
+    expect(foundUser.username).toBe(dummyUser.username);
+    expect(foundUser.password).not.toBe(dummyUser.password);
+    expect(foundUser.email).toBe(dummyUser.email);
   });
 
   it("Same user cannot be registered twice.", async () => {
-    const res = await query({
-      query: "register",
-      variables: dummyUserData,
-    });
-    expect(res.data?.register).toBe(null);
+    const res = await query({ query: REGISTER, variables: dummyUser });
+
+    expect(res.data?.register).toBeFalsy();
   });
 });
 
 describe("Me", () => {
-  const { query } = createTestClient(createServer({ token }));
+  let token: string;
+
+  beforeAll(async () => {
+    await removeAllCollections();
+    const res = await query({
+      query: REGISTER,
+      variables: dummyUser,
+    });
+    token = res.data?.register;
+  });
 
   it("With valid token should returns user data.", async () => {
-    const res = await query({ query: ME });
+    const res = await query({ query: ME }, token);
     const user = res.data?.me;
-    expect(user).not.toBe(null);
-    expect(user.username).toBe(dummyUserData.username);
-    expect(user.password).toBe(undefined);
+    expect(user.username).toBe(dummyUser.username);
   });
   it("With invalid token result in null.", async () => {
-    const response = await request(meGQL, "bad_token");
-    const user = response.data;
-    expect(user).toBe(null);
+    const res = await query({ query: ME });
+    const user = res.data;
+    expect(user).toBeFalsy();
   });
 });
 
-// const loginGQL = (email: string, password: string) => `
-// mutation{
-//   login(email: "${email}", password: "${password}")
-// }`;
+describe("Login", () => {
+  beforeAll(async () => {
+    await removeAllCollections();
+    await query({
+      query: REGISTER,
+      variables: dummyUser,
+    });
+  });
 
-// describe("Login", () => {
-//   it("should returns token if credensials valid", async () => {
-//     const goodLoginGQL = loginGQL(dummyUserData.email, dummyUserData.password);
+  it("should returns token if credensials valid", async () => {
+    const res = await query({
+      query: LOGIN,
+      variables: {
+        email: dummyUser.email,
+        password: dummyUser.password,
+      },
+    });
+    console.log(res);
 
-//     const response0 = await query(goodLoginGQL);
-//     expect(response0.data.login).not.toBe(null);
-//   });
+    expect(res.data?.login).toBeTruthy();
+  });
 
-//   it("should returns token if credensials invalid", async () => {
-//     const badLoginGQL = loginGQL("Bad email", "Bad password");
+  it("should return null if there is no user with this email", async () => {
+    const res = await query({
+      query: LOGIN,
+      variables: {
+        email: "bad_user_email@test.com",
+        password: dummyUser.password,
+      },
+    });
 
-//     const res = await query({ query: GET_LAUNCH, variables: { id: 1 } });
-//     expect(response1.data.login).toBe(null);
-//   });
-// });
+    expect(res.data?.login).toBeFalsy();
+  });
+
+  it("should return null if password invalid", async () => {
+    const res = await query({
+      query: LOGIN,
+      variables: {
+        email: dummyUser.email,
+        password: "bad_user_password",
+      },
+    });
+
+    expect(res.data?.login).toBeFalsy();
+  });
+});

@@ -1,12 +1,8 @@
-import { verifyAuthToken } from "../utils/authToken";
+import { verifyAuthToken } from "./authToken";
 import { User as IUser } from "../types/types";
-import User from "../models/User.model";
+import User from "../models/user.model";
 
-const authMiddleware = async (
-  token: string | undefined
-): Promise<IUser | null> => {
-  if (!token) return null;
-
+const getUserBasedOnToken = async (token: string): Promise<IUser | null> => {
   const tokenData = verifyAuthToken(token);
 
   if (!tokenData) return null;
@@ -20,4 +16,4 @@ const authMiddleware = async (
   return foundUser;
 };
 
-export default authMiddleware;
+export default getUserBasedOnToken;

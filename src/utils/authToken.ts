@@ -1,8 +1,6 @@
-import * as mongoose from "mongoose";
 import * as jwt from "jsonwebtoken";
 import { TokenData } from "../types/util";
 
-// const algorithm = "RS256";
 const secret = process.env.JWT_AUTH_SECRET as string;
 
 export const signAuthToken = (tokenData: TokenData): string =>
@@ -10,7 +8,7 @@ export const signAuthToken = (tokenData: TokenData): string =>
 
 /**
  * @param context Graphql context
- * @returns (in Promise) user id contained in jwt token, or false in case of bad token
+ * @returns (in Promise) TokenData contained in jwt token, or false in case of bad token
  */
 export const verifyAuthToken = (bearerToken: string): TokenData | null => {
   const token = bearerToken.split(" ")[1];
