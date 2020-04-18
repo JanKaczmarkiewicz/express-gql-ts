@@ -21,3 +21,9 @@ export const LOGIN = gql`
     login(email: $email, password: $password)
   }
 `;
+
+export const VERIFY_EMAIL = gql`
+  mutation verifyEmail($token: String!) {
+    verifyEmail(token: $token)
+  }
+`;
