@@ -1,20 +1,21 @@
 {
   "name": "express-gql-ts",
   "version": "1.0.0",
-  "description": "boilerplate for express, qraphql, typescript, setup",
+  "description": "boilerplate for express, graphql, typescript, setup",
   "scripts": {
     "start": "cross-env ENVIRONMENT=dev nodemon --exec ts-node src/init.ts",
-    "ci": "cross-env ENVIRONMENT=test start-server-and-test _startServer http://localhost:3002 test",
     "gen": "graphql-codegen",
-    "_test": "cross-env ENVIRONMENT=test jest --detectOpenHandles",
-    "_startServer": "ts-node src/init.ts"
+    "test": "cross-env ENVIRONMENT=test jest --detectOpenHandles",
+    "clear-cache": "jest --clearCache"
   },
   "author": "Jan Kaczmarkiewicz",
   "license": "ISC",
   "dependencies": {
     "@graphql-codegen/typescript-mongodb": "^1.13.2",
+    "apollo-server": "^2.12.0",
     "apollo-server-core": "^2.12.0",
     "bcryptjs": "^2.4.3",
+    "co": "^4.6.0",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "dotenv-cli": "^3.1.0",
@@ -33,6 +34,7 @@
     "@graphql-codegen/cli": "^1.13.2",
     "@graphql-codegen/near-operation-file-preset": "^1.13.2",
     "@graphql-codegen/typescript": "^1.13.2",
+    "@graphql-codegen/typescript-resolvers": "^1.13.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.5",
     "@types/jest": "^25.2.1",
@@ -42,7 +44,10 @@
     "@types/node": "^13.11.1",
     "@types/nodemailer": "^6.4.0",
     "@types/yup": "^0.26.35",
+    "apollo-server-testing": "^2.12.0",
     "axios": "^0.19.2",
+    "caller-path": "^3.0.0",
+    "graphql-tag": "^2.10.3",
     "jest": "^25.3.0",
     "nodemon": "^2.0.3",
     "start-server-and-test": "^1.10.11",
@@ -56,7 +61,7 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
-      "<rootDir>src/testUtils/_test.init.ts"
+      "<rootDir>src/testUtils/__setup.ts"
     ]
   }
 }

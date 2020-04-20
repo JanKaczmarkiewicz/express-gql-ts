@@ -4,6 +4,7 @@ import { UserDbObject } from "../types/types";
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  confirmed: { type: Boolean, default: false },
   email: {
     type: String,
     required: true,

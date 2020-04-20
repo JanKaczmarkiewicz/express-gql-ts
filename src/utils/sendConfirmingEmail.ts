@@ -1,6 +1,5 @@
 import * as nodemailer from "nodemailer";
 import { User } from "../types/types";
-import { signConfirmingToken } from "./confirmingToken";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -10,17 +9,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendConfirmingEmail = async (user: User) => {
-  const token = signConfirmingToken({ id: user.id });
-
-  await transporter.sendMail(
+export const sendConfirmingEmail = async (token: string, user: User) => {
+  transporter.sendMail(
     {
-      from: "positiveKiddo@gmail.com", // sender address
+      from: process.env.EMAIL_SENDER_ADDRESS,
       to: user.email,
-      subject: "Confirm account", // Subject line
+      subject: "Confirm account",
       text: `Hello ${user.username}`,
       html: `<a href="http://localhost:${process.env.PORT}/confirm/${token}">Confirm your account</a>`,
-      // html: "RAFAŁ JEST GŁUPI I PAWEŁ TEŹ",
     },
     (err) => {
       if (err) {

@@ -1,9 +1,0 @@
-type Mutation {
-  register(email: String!, password: String!, username: String!): String #token
-  login(email: String!, password: String!): String #token
-  verifyEmail(token: String!): Boolean!
-}
-
-type Query {
-  me: User!
-}
