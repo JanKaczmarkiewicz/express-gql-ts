@@ -35,7 +35,5 @@ export default () => {
   }
   ${moduleTypeDefs}`;
 
-  console.log(typeDefs);
-
   return { typeDefs, resolvers };
 };

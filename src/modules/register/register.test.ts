@@ -11,8 +11,6 @@ beforeAll(async () => {
 });
 
 describe("Register", () => {
-  beforeAll(async () => {});
-
   it("Response should returns token", async () => {
     const res = await query({ query: REGISTER, variables: dummyUser });
 

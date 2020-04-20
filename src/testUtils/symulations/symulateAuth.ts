@@ -1,6 +1,8 @@
 import { MutationRegisterArgs } from "../../types/types";
 import { query } from "../query";
 import { REGISTER, VERIFY_EMAIL, LOGIN, ME } from "../queries";
+import { verifyAuthToken } from "../../utils/authToken";
+import { signConfirmingToken } from "../../utils/confirmingToken";
 
 export const symulateAuth = (userData: MutationRegisterArgs) => {
   const stack: Function[] = [];
@@ -23,12 +25,15 @@ export const symulateAuth = (userData: MutationRegisterArgs) => {
   };
 
   const verifyEmail = () => {
-    stack.push((verificationToken: string) =>
-      query({
+    stack.push((authToken: string) => {
+      const userId = verifyAuthToken(authToken)?.id;
+      const verificationToken = signConfirmingToken({ id: userId ?? "" });
+
+      return query({
         query: VERIFY_EMAIL,
         variables: { token: verificationToken },
-      }).then((res) => res.data?.verifyEmail)
-    );
+      }).then((res) => res.data?.verifyEmail);
+    });
 
     return { login, execute };
   };

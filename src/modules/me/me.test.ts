@@ -5,22 +5,19 @@ import { dummyUser } from "../../testUtils/dummyUser";
 import { query } from "../../testUtils/query";
 import { symulateAuth } from "../../testUtils/symulations/symulateAuth";
 
+let token: string;
+
 beforeAll(async () => {
   await createDatabaseConnection();
+  await removeAllCollections();
+  token = await symulateAuth(dummyUser)
+    .register()
+    .verifyEmail()
+    .login()
+    .execute();
 });
 
 describe("Me", () => {
-  let token: string;
-
-  beforeAll(async () => {
-    await removeAllCollections();
-    token = await symulateAuth(dummyUser)
-      .register()
-      .verifyEmail()
-      .login()
-      .execute();
-  });
-
   it("With valid token should returns user data.", async () => {
     const res = await query({ query: ME }, token);
     const user = res.data?.me;

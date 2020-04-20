@@ -9,6 +9,7 @@ import { signAuthToken } from "../../utils/authToken";
 import { registerSchema } from "../../validators/validators";
 import { validateArgs } from "../../utils/validateArgs";
 import { sendConfirmingEmail } from "../../utils/sendConfirmingEmail";
+import { signConfirmingToken } from "../../utils/confirmingToken";
 
 export const resolvers: Resolvers = {
   Mutation: {
@@ -37,9 +38,11 @@ export const resolvers: Resolvers = {
         confirmed: false,
       }).save();
 
-      await sendConfirmingEmail(savedUser as any);
+      const confirmingToken = signConfirmingToken({ id: savedUser.id });
+      sendConfirmingEmail(confirmingToken, savedUser);
 
-      return signAuthToken({ id: savedUser.id });
+      const authToken: string = signAuthToken({ id: savedUser.id });
+      return authToken;
     },
   },
 };

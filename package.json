@@ -1,11 +1,12 @@
 {
   "name": "express-gql-ts",
   "version": "1.0.0",
-  "description": "boilerplate for express, qraphql, typescript, setup",
+  "description": "boilerplate for express, graphql, typescript, setup",
   "scripts": {
     "start": "cross-env ENVIRONMENT=dev nodemon --exec ts-node src/init.ts",
     "gen": "graphql-codegen",
-    "test": "cross-env ENVIRONMENT=test jest --runInBand --detectOpenHandles"
+    "test": "cross-env ENVIRONMENT=test jest --detectOpenHandles",
+    "clear-cache": "jest --clearCache"
   },
   "author": "Jan Kaczmarkiewicz",
   "license": "ISC",

@@ -1,54 +1,53 @@
-// import createDatabaseConnection from "../../db/connect";
-// import { removeAllCollections } from "../../testUtils/connectToMongoose";
-// import { VERIFY_EMAIL } from "../../testUtils/queries";
-// import { dummyUser } from "../../testUtils/dummyUser";
-// import { query } from "../../testUtils/query";
-// import { symulateAuth } from "../../testUtils/symulations/symulateAuth";
+import createDatabaseConnection from "../../db/connect";
+import { removeAllCollections } from "../../testUtils/connectToMongoose";
+import { VERIFY_EMAIL } from "../../testUtils/queries";
+import { dummyUser } from "../../testUtils/dummyUser";
+import { query } from "../../testUtils/query";
+import { symulateAuth } from "../../testUtils/symulations/symulateAuth";
+import { authTokenToVerificationToken } from "../../utils/authTokenToVerificationToken";
 
-// beforeAll(async () => {
-//   await createDatabaseConnection();
-// });
+let verificationToken: string;
 
-// describe("Login", () => {
-//   let verificationToken: string;
+beforeAll(async () => {
+  await createDatabaseConnection();
+  await removeAllCollections();
 
-//   beforeAll(async () => {
-//     await removeAllCollections();
-//     await symulateAuth(dummyUser).register().execute();
-//   });
+  const authToken = await symulateAuth(dummyUser).register().execute();
+  verificationToken = authTokenToVerificationToken(authToken);
+});
 
-//   it("should returns token if credensials valid", async () => {
-//     const res = await query({
-//       query: VERIFY_EMAIL,
-//       variables: {
-//         token: verificationToken,
-//       },
-//     });
+describe("Login", () => {
+  it("should returns true if verificationToken valid", async () => {
+    const res = await query({
+      query: VERIFY_EMAIL,
+      variables: {
+        token: verificationToken,
+      },
+    });
 
-//     expect(res.data?.login).toBeTruthy();
-//   });
+    expect(res.data?.verifyEmail).toBeTruthy();
+  });
 
-//   it("should return null if there is no user with this email", async () => {
-//     const res = await query({
-//       query: LOGIN,
-//       variables: {
-//         email: "bad_user_email@test.com",
-//         password: dummyUser.password,
-//       },
-//     });
+  it("should returns false if verificationToken invalid", async () => {
+    const res = await query({
+      query: VERIFY_EMAIL,
+      variables: {
+        token: "Wrong token",
+      },
+    });
 
-//     expect(res.data?.login).toBeFalsy();
-//   });
+    expect(res.data?.verifyEmail).toBeFalsy();
+  });
 
-//   it("should return null if password invalid", async () => {
-//     const res = await query({
-//       query: LOGIN,
-//       variables: {
-//         email: dummyUser.email,
-//         password: "bad_user_password",
-//       },
-//     });
+  it("should returns false if authToken is passed as verificationToken.", async () => {
+    const authToken = await symulateAuth(dummyUser).register().execute();
+    const res = await query({
+      query: VERIFY_EMAIL,
+      variables: {
+        token: authToken,
+      },
+    });
 
-//     expect(res.data?.login).toBeFalsy();
-//   });
-// });
+    expect(res.data?.verifyEmail).toBeFalsy();
+  });
+});

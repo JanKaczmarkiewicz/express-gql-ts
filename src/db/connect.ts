@@ -3,7 +3,7 @@ import * as mongoose from "mongoose";
 const createDatabaseConnection = (options: mongoose.ConnectionOptions = {}) => {
   mongoose.connection
     .on("error", console.error)
-    .on("disconnected", createDatabaseConnection);
+    .on("disconnected", () => createDatabaseConnection());
 
   return mongoose
     .connect(
@@ -12,6 +12,7 @@ const createDatabaseConnection = (options: mongoose.ConnectionOptions = {}) => {
         useNewUrlParser: true,
         useCreateIndex: true,
         useUnifiedTopology: true,
+        useFindAndModify: false,
         ...options,
       }
     )

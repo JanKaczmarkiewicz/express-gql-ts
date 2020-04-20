@@ -7,14 +7,11 @@ import { symulateAuth } from "../../testUtils/symulations/symulateAuth";
 
 beforeAll(async () => {
   await createDatabaseConnection();
+  await removeAllCollections();
+  await symulateAuth(dummyUser).register().verifyEmail().execute();
 });
 
 describe("Login", () => {
-  beforeAll(async () => {
-    await removeAllCollections();
-    await symulateAuth(dummyUser).register().verifyEmail().execute();
-  });
-
   it("should returns token if credensials valid", async () => {
     const res = await query({
       query: LOGIN,

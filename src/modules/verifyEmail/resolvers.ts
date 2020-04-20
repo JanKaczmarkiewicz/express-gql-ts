@@ -13,15 +13,17 @@ export const resolvers: Resolvers = {
         throw new ForbiddenError("Bad confirming token");
       }
 
-      const foundUser = await User.findOne({ _id: userId });
+      const foundUser = await User.findOneAndUpdate(
+        { _id: userId },
+        { confirmed: true },
+        { new: true }
+      );
 
       if (!foundUser) {
         throw new AuthenticationError("User not exists");
       }
 
-      const { confirmed } = await foundUser.update({ confirmed: true });
-
-      return confirmed;
+      return foundUser.confirmed;
     },
   },
 };
