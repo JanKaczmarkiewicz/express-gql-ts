@@ -1,8 +1,11 @@
 import { defaultFieldResolver, GraphQLField } from "graphql";
-import { Context } from "../types/util";
 import { SchemaDirectiveVisitor, UserInputError } from "apollo-server";
+
 import * as validators from "../validators/validators";
+import { responceError } from "../errors/responce";
 import { validateArgs } from "../utils/validateArgs";
+
+import { Context } from "../types/util";
 
 export class ValidateDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field: GraphQLField<any, Context>) {
@@ -23,7 +26,7 @@ export class ValidateDirective extends SchemaDirectiveVisitor {
       const [, args] = resolverArgs;
       const validationErrors = await validateArgs(validator, args);
       if (validationErrors.length > 0) {
-        throw new UserInputError("Validation errors", {
+        throw new UserInputError(responceError.validationFails, {
           validationErrors,
         });
       }

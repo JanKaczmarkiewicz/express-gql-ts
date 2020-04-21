@@ -10,7 +10,7 @@ export default (options?: ServerOptions) => {
   const server = new ApolloServer({
     resolvers,
     typeDefs,
-    schemaDirectives: <any>directives,
+    schemaDirectives: directives,
     context: async (expressContext) => {
       const token: string | undefined =
         expressContext.req?.headers.authorization ?? options?.token;

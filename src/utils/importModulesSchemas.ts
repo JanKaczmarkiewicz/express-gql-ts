@@ -1,11 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
 import { IResolvers } from "graphql-tools";
-import { AuthDirective } from "../directives/isAuthenticated";
+import { IsAuthenticatedDirective } from "../directives/isAuthenticated";
 import gql from "graphql-tag";
 import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
 import { ValidateDirective } from "../directives/validate";
-// import { ValidateDirective } from "../directives/validate";
 
 const pathToModules = path.join(__dirname, "../modules");
 
@@ -45,7 +44,7 @@ export default () => {
 
   //directives
   const directives = {
-    isAuthenticated: AuthDirective,
+    isAuthenticated: IsAuthenticatedDirective,
     validate: ValidateDirective,
   };
 

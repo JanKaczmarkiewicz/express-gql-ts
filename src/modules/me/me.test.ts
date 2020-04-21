@@ -25,7 +25,7 @@ describe("Me", () => {
   });
   it("With invalid token result in null.", async () => {
     const res = await query({ query: ME });
-    const user = res.data;
+    const user = res.data?.me;
     expect(user).toBeFalsy();
   });
 });

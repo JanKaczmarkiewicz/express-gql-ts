@@ -1,4 +1,5 @@
 import createDatabaseConnection from "../../db/connect";
+
 import { removeAllCollections } from "../../testUtils/connectToMongoose";
 import { LOGIN } from "../../testUtils/queries";
 import { dummyUser } from "../../testUtils/dummyUser";

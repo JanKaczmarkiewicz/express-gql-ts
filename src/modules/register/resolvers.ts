@@ -8,15 +8,15 @@ import { signAuthToken } from "../../utils/authToken";
 
 import { sendConfirmingEmail } from "../../utils/sendConfirmingEmail";
 import { signConfirmingToken } from "../../utils/confirmingToken";
+import { responceError } from "../../errors/responce";
 
 export const resolvers: Resolvers = {
   Mutation: {
     register: async (_, { password, username, email }) => {
       const foundUsers = await User.find({ $or: [{ username }, { email }] });
 
-      if (foundUsers.length > 0) {
-        throw new ForbiddenError("User aready exist");
-      }
+      if (foundUsers.length > 0)
+        throw new ForbiddenError(responceError.userExists);
 
       const hashedPassword = await bcrypt.hash(password, 10);
 

@@ -1,18 +1,19 @@
 import { MutationRegisterArgs } from "../../types/types";
 import { query } from "../query";
 import { REGISTER, VERIFY_EMAIL, LOGIN, ME } from "../queries";
-import { verifyAuthToken } from "../../utils/authToken";
-import { signConfirmingToken } from "../../utils/confirmingToken";
+import { authTokenToVerificationToken } from "../../utils/authTokenToVerificationToken";
 
 export const symulateAuth = (userData: MutationRegisterArgs) => {
   const stack: Function[] = [];
 
   const execute = async () =>
     <any>(
-      stack.reduce(
-        (promise, callback: any) => promise.then(callback),
-        Promise.resolve()
-      )
+      stack
+        .reduce(
+          (promise, callback: any) => promise.then(callback),
+          Promise.resolve()
+        )
+        .catch(console.error)
     );
 
   const register = () => {
@@ -26,13 +27,15 @@ export const symulateAuth = (userData: MutationRegisterArgs) => {
 
   const verifyEmail = () => {
     stack.push((authToken: string) => {
-      const userId = verifyAuthToken(authToken)?.id;
-      const verificationToken = signConfirmingToken({ id: userId ?? "" });
+      const verificationToken = authTokenToVerificationToken(authToken);
 
       return query({
         query: VERIFY_EMAIL,
         variables: { token: verificationToken },
-      }).then((res) => res.data?.verifyEmail);
+      }).then((res) => {
+        console.log(res);
+        return res.data?.verifyEmail;
+      });
     });
 
     return { login, execute };
