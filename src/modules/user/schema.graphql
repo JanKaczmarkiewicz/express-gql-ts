@@ -1,4 +1,4 @@
-type Query {
-  user(id: string): User
+extend type Query {
+  user(id: String): User
   users: [User]
 }

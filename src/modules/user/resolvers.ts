@@ -1,5 +1,4 @@
 import { IResolvers } from "graphql-tools";
-import {} from "../../types/types";
 
 import User from "../../models/user.model";
 

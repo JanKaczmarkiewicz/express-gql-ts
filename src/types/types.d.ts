@@ -33,6 +33,7 @@ export type Scalars = {
 
 
 
+
 export type AdditionalEntityFields = {
   path?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -65,7 +66,14 @@ export type MutationVerifyEmailArgs = {
 
 export type Query = {
    __typename?: 'Query';
-  me: User;
+  me?: Maybe<User>;
+  user?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -159,6 +167,10 @@ export type ResolversParentTypes = {
   AdditionalEntityFields: AdditionalEntityFields,
 };
 
+export type IsAuthenticatedDirectiveArgs = {  };
+
+export type IsAuthenticatedDirectiveResolver<Result, Parent, ContextType = Context, Args = IsAuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type UnionDirectiveArgs = {   discriminatorField?: Maybe<Scalars['String']>;
   additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
 
@@ -201,7 +213,9 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>,
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
 };
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -225,6 +239,7 @@ export type Resolvers<ContextType = Context> = {
 */
 export type IResolvers<ContextType = Context> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = Context> = {
+  isAuthenticated?: IsAuthenticatedDirectiveResolver<any, any, ContextType>,
   union?: UnionDirectiveResolver<any, any, ContextType>,
   abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>,
   entity?: EntityDirectiveResolver<any, any, ContextType>,
