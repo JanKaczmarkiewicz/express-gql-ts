@@ -13,6 +13,7 @@ export type UserDbObject = {
   username: string,
   email: string,
   confirmed: boolean,
+  role: Role,
   password: string,
 };
 
@@ -24,6 +25,7 @@ export type Scalars = {
   Int: number;
   Float: number;
 };
+
 
 
 
@@ -76,12 +78,18 @@ export type QueryUserArgs = {
   id?: Maybe<Scalars['String']>;
 };
 
+export enum Role {
+  Admin = 'ADMIN',
+  User = 'USER'
+}
+
 export type User = {
    __typename?: 'User';
   _id: Scalars['String'];
   username: Scalars['String'];
   email: Scalars['String'];
   confirmed: Scalars['Boolean'];
+  role: Role;
 };
 
 
@@ -153,6 +161,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>,
   String: ResolverTypeWrapper<Scalars['String']>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  Role: Role,
   Mutation: ResolverTypeWrapper<{}>,
   AdditionalEntityFields: AdditionalEntityFields,
 };
@@ -163,13 +172,18 @@ export type ResolversParentTypes = {
   User: User,
   String: Scalars['String'],
   Boolean: Scalars['Boolean'],
+  Role: Role,
   Mutation: {},
   AdditionalEntityFields: AdditionalEntityFields,
 };
 
-export type IsAuthenticatedDirectiveArgs = {  };
+export type AuthenticatedDirectiveArgs = {   role?: Maybe<Role>; };
 
-export type IsAuthenticatedDirectiveResolver<Result, Parent, ContextType = Context, Args = IsAuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = Context, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ValidateDirectiveArgs = {   schemaName?: Maybe<Scalars['String']>; };
+
+export type ValidateDirectiveResolver<Result, Parent, ContextType = Context, Args = ValidateDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type UnionDirectiveArgs = {   discriminatorField?: Maybe<Scalars['String']>;
   additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
@@ -223,6 +237,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   confirmed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  role?: Resolver<ResolversTypes['Role'], ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -239,7 +254,8 @@ export type Resolvers<ContextType = Context> = {
 */
 export type IResolvers<ContextType = Context> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = Context> = {
-  isAuthenticated?: IsAuthenticatedDirectiveResolver<any, any, ContextType>,
+  authenticated?: AuthenticatedDirectiveResolver<any, any, ContextType>,
+  validate?: ValidateDirectiveResolver<any, any, ContextType>,
   union?: UnionDirectiveResolver<any, any, ContextType>,
   abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>,
   entity?: EntityDirectiveResolver<any, any, ContextType>,

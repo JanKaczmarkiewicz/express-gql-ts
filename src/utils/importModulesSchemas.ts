@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { IResolvers } from "graphql-tools";
-import { IsAuthenticatedDirective } from "../directives/isAuthenticated";
+import { AuthenticatedDirective } from "../directives/authenticated";
 import gql from "graphql-tag";
 import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
 import { ValidateDirective } from "../directives/validate";
@@ -44,7 +44,7 @@ export default () => {
 
   //directives
   const directives = {
-    isAuthenticated: IsAuthenticatedDirective,
+    authenticated: AuthenticatedDirective,
     validate: ValidateDirective,
   };
 
