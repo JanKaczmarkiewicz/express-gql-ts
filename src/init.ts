@@ -1,12 +1,11 @@
 import createDatabaseConnection from "./db/connect";
-import * as dotenv from "dotenv";
-import path = require("path");
 import createServer from "./server/createServer";
+import loadEnv from "./utils/loadEnv";
 
-dotenv.config({
-  path: path.resolve(__dirname, `../config/.env.${process.env.ENVIRONMENT}`),
-});
+loadEnv();
 
-createDatabaseConnection()
-  .then(() => createServer().listen(process.env.PORT))
-  .then(({ port }) => console.log(port));
+(async () => {
+  await createDatabaseConnection();
+  await createServer().listen(process.env.PORT);
+  console.log(`Server started! App is listenig in port ${process.env.PORT}.`);
+})();
