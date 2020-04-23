@@ -1,10 +1,11 @@
 import createDatabaseConnection from "../../db/connect";
-import { removeAllCollections } from "../../testUtils/connectToMongoose";
+import { User } from "../../types/types";
+
 import { USER, USERS } from "../../testUtils/queries";
+import { removeAllCollections } from "../../testUtils/connectToMongoose";
 import { dummyUser, secondDummyUser } from "../../testUtils/dummyUser";
 import { query } from "../../testUtils/query";
 import { symulateAuth } from "../../testUtils/symulations/symulateAuth";
-import { User } from "../../types/types";
 
 let token: string;
 let secondUserData: User;
@@ -12,6 +13,7 @@ let secondUserData: User;
 beforeAll(async () => {
   await createDatabaseConnection();
   await removeAllCollections();
+
   token = await symulateAuth(dummyUser)
     .register()
     .verifyEmail()
@@ -45,6 +47,15 @@ describe("User", () => {
     const user = res.data?.user;
     expect(user).toBeFalsy();
   });
+
+  it("Inauthenticated user shouldn't have access to user data.", async () => {
+    const res = await query(
+      { query: USER, variables: { id: secondUserData._id } },
+      "bad_token"
+    );
+    const user = res.data?.user;
+    expect(user).toBeFalsy();
+  });
 });
 
 describe("Users", () => {
@@ -56,11 +67,8 @@ describe("Users", () => {
     const users = res.data?.users;
     expect(users).toHaveLength(2);
   });
-  it("Inauthenticated user shouldn't have access to user to userdata.", async () => {
-    const res = await query(
-      { query: USERS, variables: { id: "bad_id" } },
-      token
-    );
+  it("Inauthenticated user shouldn't have access to list of users.", async () => {
+    const res = await query({ query: USERS }, "bad_token");
     const user = res.data?.user;
     expect(user).toBeFalsy();
   });

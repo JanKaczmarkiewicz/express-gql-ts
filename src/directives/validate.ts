@@ -13,7 +13,7 @@ export class ValidateDirective extends SchemaDirectiveVisitor {
     const { schemaName } = this.args as { schemaName: string };
 
     if (typeof schemaName !== "string") {
-      throw new Error("SchemaName should be a string!");
+      throw new Error("schemaName should be a string!");
     }
 
     const validator = (validators as any)[schemaName];
