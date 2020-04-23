@@ -1,11 +1,7 @@
-import { ForbiddenError } from "apollo-server-core";
-import { Resolvers } from "../../types/types";
+import { Resolvers, User } from "../../types/types";
 
 export const resolvers: Resolvers = {
   Query: {
-    me: async (_, __, { user }) => {
-      if (!user) throw new ForbiddenError("Provide a token.");
-      return user;
-    },
+    me: async (_, __, { user }) => user as User,
   },
 };

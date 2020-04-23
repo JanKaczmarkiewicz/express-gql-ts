@@ -1,16 +1,9 @@
-import { IResolvers } from "graphql-tools";
-import {} from "../../types/types";
-
 import User from "../../models/user.model";
+import { Resolvers } from "../../types/types";
 
-export const resolvers: IResolvers = {
+export const resolvers: Resolvers = {
   Query: {
-    user: async (_, { id }) => {
-      const user = await User.findOne({ id });
-      return user ? user : null;
-    },
-    users: async (_, {}) => {
-      return await User.find();
-    },
+    user: async (_, { id }) => User.findOne({ _id: id }),
+    users: async (_, {}) => User.find(),
   },
 };

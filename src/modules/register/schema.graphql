@@ -1,3 +1,4 @@
 extend type Mutation {
-  register(email: String!, password: String!, username: String!): String! #token
+  register(email: String!, password: String!, username: String!): String!
+    @validate(schemaName: "registerSchema") #token
 }

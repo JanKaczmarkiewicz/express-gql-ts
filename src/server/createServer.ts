@@ -1,15 +1,16 @@
-import { ApolloServer, gql } from "apollo-server";
-import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
+import { ApolloServer } from "apollo-server";
 
 import importModulesSchemas from "../utils/importModulesSchemas";
 import getUserBasedOnToken from "../utils/getUserBasedOnToken";
 import { Context, ServerOptions } from "../types/util";
-const { resolvers, typeDefs } = importModulesSchemas();
+
+const { resolvers, typeDefs, directives } = importModulesSchemas();
 
 export default (options?: ServerOptions) => {
   const server = new ApolloServer({
     resolvers,
-    typeDefs: [gql(typeDefs), DIRECTIVES],
+    typeDefs,
+    schemaDirectives: directives,
     context: async (expressContext) => {
       const token: string | undefined =
         expressContext.req?.headers.authorization ?? options?.token;

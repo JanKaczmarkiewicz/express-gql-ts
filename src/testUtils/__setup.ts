@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-import path = require("path");
+import loadEnv from "../utils/loadEnv";
 
-dotenv.config({
-  path: path.resolve(__dirname, `../../config/.env.${process.env.ENVIRONMENT}`),
-});
+loadEnv();
