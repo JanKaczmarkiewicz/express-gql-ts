@@ -27,3 +27,25 @@ export const VERIFY_EMAIL = gql`
     verifyEmail(token: $token)
   }
 `;
+
+export const USER = gql`
+  query user($id: String!) {
+    user(id: $id) {
+      username
+      email
+      confirmed
+      _id
+    }
+  }
+`;
+
+export const USERS = gql`
+  query {
+    users {
+      username
+      email
+      confirmed
+      _id
+    }
+  }
+`;

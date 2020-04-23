@@ -68,14 +68,14 @@ export type MutationVerifyEmailArgs = {
 
 export type Query = {
    __typename?: 'Query';
-  me?: Maybe<User>;
+  me: User;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
 };
 
 
 export type QueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
 };
 
 export enum Role {
@@ -177,7 +177,7 @@ export type ResolversParentTypes = {
   AdditionalEntityFields: AdditionalEntityFields,
 };
 
-export type AuthenticatedDirectiveArgs = {   role?: Maybe<Role>; };
+export type AuthenticatedDirectiveArgs = {   roles?: Maybe<Array<Maybe<Role>>>; };
 
 export type AuthenticatedDirectiveResolver<Result, Parent, ContextType = Context, Args = AuthenticatedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
@@ -227,8 +227,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, never>>,
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
 };
 

@@ -1,6 +1,8 @@
 import * as mongoose from "mongoose";
 
 const createDatabaseConnection = (options: mongoose.ConnectionOptions = {}) => {
+  if (mongoose.connection.readyState == 1) return mongoose;
+
   mongoose.connection
     .on("error", console.error)
     .on("disconnected", () => createDatabaseConnection());

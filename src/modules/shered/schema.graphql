@@ -1,4 +1,4 @@
-directive @authenticated(role: Role = USER) on FIELD_DEFINITION
+directive @authenticated(roles: [Role] = [USER]) on FIELD_DEFINITION
 directive @validate(schemaName: String) on FIELD_DEFINITION
 
 type User @entity(additionalFields: [{ path: "password", type: "string" }]) {

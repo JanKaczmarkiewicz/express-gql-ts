@@ -5,4 +5,5 @@ export const responceError = {
   userExists: "User aready exist",
   badConfirmingToken: "Bad confirming token",
   validationFails: "Validation errors",
+  noRequiredRole: "No required role",
 };

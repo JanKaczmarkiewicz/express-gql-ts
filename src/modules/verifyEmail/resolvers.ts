@@ -21,8 +21,6 @@ export const resolvers: Resolvers = {
       if (!foundUser)
         throw new AuthenticationError(responceError.userNotExists);
 
-      console.log(foundUser.confirmed);
-
       return foundUser.confirmed;
     },
   },

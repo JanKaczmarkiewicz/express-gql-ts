@@ -22,7 +22,7 @@ export const symulateAuth = (userData: MutationRegisterArgs) => {
         (res) => res.data?.register
       )
     );
-    return { verifyEmail, execute };
+    return { verifyEmail, login, execute };
   };
 
   const verifyEmail = () => {
@@ -32,10 +32,7 @@ export const symulateAuth = (userData: MutationRegisterArgs) => {
       return query({
         query: VERIFY_EMAIL,
         variables: { token: verificationToken },
-      }).then((res) => {
-        console.log(res);
-        return res.data?.verifyEmail;
-      });
+      }).then((res) => res.data?.verifyEmail);
     });
 
     return { login, execute };
